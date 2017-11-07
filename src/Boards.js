@@ -4,8 +4,9 @@ import {Grid, Row, Col, FormGroup, FormControl, Button, Dropdown, MenuItem, Glyp
 import logo from './assets/logo.png';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
+import {addBoard, changeNewBoard, inputNewBoardChange} from './actions';
 
-const Boards = ({boards}) =>
+const Boards = ({boards, toAddBoard, inputNewBoard}) =>
 {
     const boardList = boards.map((board, index) =>(
         <Col key={index} xs={3} xsOffset={0} md={3} mdOffset={0}>
@@ -48,14 +49,34 @@ const Boards = ({boards}) =>
       </Row>
       <Row>      
         {boardList}
-        <Col xs={3} xsOffset={0} md={3} mdOffset={0}>
-            <div className="btn new">Add new board...</div>
+        <Col xs={3} xsOffset={0} md={3} mdOffset={0} onClick={changeNewBoard}>
+            {
+                toAddBoard 
+                ? 
+                <div className="btn board">New board
+                    <FormGroup
+                    controlId="formBasicText"
+                    validationState=""
+                    >
+                    <FormControl
+                        type="text"
+                        value={inputNewBoard}
+                        placeholder="Board name"
+                        onChange={inputNewBoardChange}
+                    />
+                    <FormControl.Feedback />
+                    </FormGroup>
+                    <div className="btn createBoard">Create board</div> or <a>cancel</a>
+                </div> 
+                : 
+                <div className="btn new">Add new board...</div>
+            }
         </Col>
       </Row>
     </Grid>
   );
 }
 
-const mapToProps = ({boards}) => ({boards})
+const mapToProps = ({boards, toAddBoard, inputNewBoard}) => ({boards, toAddBoard, inputNewBoard})
 
 export default connect(mapToProps)(Boards);

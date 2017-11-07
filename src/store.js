@@ -31,6 +31,8 @@ let BOARDS =
 const initialState = {
     boards: BOARDS,
     selectedItem : -1,
+    toAddBoard: false,
+    inputNewBoard: "",
 }
 
 const store = createStore(initialState);
