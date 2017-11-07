@@ -29,12 +29,14 @@ i
   color: #4c4e50;
   background-color: #D5D4DB;
   text-align: left;
+  width: 196.75px;
+  margin: 10px 0;
 }
 .new
 {
   background-color: #745286;  
   color: #bdc3c7;
-  
+  margin: 10px 0;  
 }
 .new:hover
 {
@@ -57,6 +59,7 @@ i
 }
 .createBoard
 {
+  color: #4c4e50; 
   background-color: #DDDDDD;
   border: 1px solid rgb(189, 195, 199);
 }

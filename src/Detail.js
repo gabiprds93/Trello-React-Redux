@@ -5,9 +5,9 @@ import logo from './assets/logo.png';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
 
-const Detail = ({boards}) =>
+const Detail = ({boards, selectedItem}) =>
 {
-    const listList = boards[0].lists.map((list, index) => {
+    const listList = boards[selectedItem].lists.map((list, index) => {
         const listCard= list.cards.map((card, index) => (
             <Row key={index}>
                 <Col xs={12} md={12}>
@@ -58,13 +58,13 @@ const Detail = ({boards}) =>
         </Col>
         <Col xs={1} xsOffset={0} md={1} mdOffset={0}>
             <div className="btn headerElement">
-                <NavLink to={"/signin"}><i class="fa fa-sign-out" aria-hidden="true"></i> Sign out</NavLink>
+                <NavLink to={"/signin"}><i className="fa fa-sign-out" aria-hidden="true"></i> Sign out</NavLink>
             </div>
         </Col>
       </Row>
       <Row>
         <Col xs={2} xsOffset={0} md={2} mdOffset={0} className="myBoards">
-            Tes board
+            {boards[selectedItem].name}
         </Col>
       </Row>
       <Row>
@@ -77,6 +77,6 @@ const Detail = ({boards}) =>
   );
 }
 
-const mapToProps = ({boards}) => ({boards})
+const mapToProps = ({boards, selectedItem}) => ({boards, selectedItem})
 
 export default connect(mapToProps)(Detail);

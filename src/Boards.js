@@ -4,14 +4,23 @@ import {Grid, Row, Col, FormGroup, FormControl, Button, Dropdown, MenuItem, Glyp
 import logo from './assets/logo.png';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
-import {addBoard, changeNewBoard, inputNewBoardChange} from './actions';
+import {addBoard, changeNewBoard, inputNewBoardChange, selectBoard} from './actions';
+
+const Board = ({name, index, selectBoard}) =>
+(
+    <Col key={index} xs={3} xsOffset={0} md={3} mdOffset={0}>
+        <NavLink to={"/detail"}><div className="btn board" onClick={selectBoard}>{name}</div></NavLink>
+    </Col>
+)
 
 const Boards = ({boards, toAddBoard, inputNewBoard}) =>
 {
+    const addToBoard = () => {  
+        addBoard(inputNewBoard);
+        selectBoard(boards.length);
+     };
     const boardList = boards.map((board, index) =>(
-        <Col key={index} xs={3} xsOffset={0} md={3} mdOffset={0}>
-            <div className="btn board">{board.name}</div>
-        </Col>
+        <Board name={board.name} index={index} selectBoard={ () => selectBoard (index)} />
     ));
   return (
     <Grid fluid={true}>
@@ -56,7 +65,6 @@ const Boards = ({boards, toAddBoard, inputNewBoard}) =>
                 <div className="btn board">New board
                     <FormGroup
                     controlId="formBasicText"
-                    validationState=""
                     >
                     <FormControl
                         type="text"
@@ -66,7 +74,10 @@ const Boards = ({boards, toAddBoard, inputNewBoard}) =>
                     />
                     <FormControl.Feedback />
                     </FormGroup>
-                    <div className="btn createBoard">Create board</div> or <a>cancel</a>
+                    <NavLink to={"/detail"}>
+                        <div className="btn createBoard" onClick={addToBoard}>Create board</div>
+                    </NavLink> or <a>cancel</a>
+                    
                 </div> 
                 : 
                 <div className="btn new">Add new board...</div>
