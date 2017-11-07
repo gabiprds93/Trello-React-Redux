@@ -40,9 +40,11 @@ const SignIn = () =>
               />
               <FormControl.Feedback />
             </FormGroup>
-            <Button type="submit" bsSize="large" block>
-              Sign in
-            </Button>
+            <NavLink to={"/boards"}>
+              <Button type="submit" bsSize="large" block>
+                Sign in
+              </Button>
+            </NavLink>
           </form>
         </Col>
       </Row>
