@@ -2,30 +2,30 @@ import createStore from 'redux-zero';
 
 let BOARDS = 
 [
-    {
-        name: "Tes board",
-        lists: 
-        [
-            {
-                name: "ABC",
-                cards: ["test", "test2"],
-            },
-            {
-                name: "DEF",
-                cards: [],
-            }
-        ],
-    },
-    {
-        name: "Tes board2",
-        lists: 
-        [
-            {
-                name: "QWE",
-                cards: [],
-            }
-        ],
-    }
+    // {
+    //     name: "Tes board",
+    //     lists: 
+    //     [
+    //         {
+    //             name: "ABC",
+    //             cards: ["test", "test2"],
+    //         },
+    //         {
+    //             name: "DEF",
+    //             cards: [],
+    //         }
+    //     ],
+    // },
+    // {
+    //     name: "Tes board2",
+    //     lists: 
+    //     [
+    //         {
+    //             name: "QWE",
+    //             cards: [],
+    //         }
+    //     ],
+    // }
 ]
 
 const initialState = {
@@ -33,6 +33,10 @@ const initialState = {
     selectedItem : -1,
     toAddBoard: false,
     inputNewBoard: "",
+    toAddList: false,
+    inputNewList: "",
+    toAddCard: false,
+    inputNewCard: "",
 }
 
 const store = createStore(initialState);

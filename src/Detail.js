@@ -4,11 +4,21 @@ import {Grid, Row, Col, FormGroup, FormControl, Button, Dropdown, MenuItem, Glyp
 import logo from './assets/logo.png';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
+import {addList, changeNewList, inputNewListChange, addCard, changeNewCard, inputNewCardChange} from './actions';
 
-const Detail = ({boards, selectedItem}) =>
+const Detail = ({boards, selectedItem, toAddList, inputNewList, toAddCard, inputNewCard}) =>
 {
+    const addToList = () => {
+        addList(inputNewList, boards[selectedItem].id, selectedItem);
+        // selectBoard(boards.length);
+    };
+    const addToCard = () =>{
+        addCard(inputNewCard);
+    }
+    console.log("boards",boards);
+    console.log("selected", selectedItem);
     const listList = boards[selectedItem].lists.map((list, index) => {
-        const listCard= list.cards.map((card, index) => (
+        const listCard = list.cards.map((card, index) => (
             <Row key={index}>
                 <Col xs={12} md={12}>
                     <div className="card">{card}</div>
@@ -24,9 +34,20 @@ const Detail = ({boards, selectedItem}) =>
                     </Col>
                 </Row>
                 {listCard}
-                <Row className="btn newCard">
+                <Row className="btn">
                     <Col xs={12} md={12}>
-                        Add new card...                        
+                    {
+                        toAddCard
+                        ? 
+                        <div className="btn board">
+                            <FormGroup controlId="formControlsTextarea">
+                                <FormControl componentClass="textarea" value={inputNewCard} onChange={inputNewCardChange} />
+                            </FormGroup>
+                            <div className="btn createBoard" onClick={addToCard}>Add</div> or <a>cancel</a>
+                        </div> 
+                        : 
+                        <div className="newCard" onClick={changeNewCard}>Add new card...</div>
+                    }                      
                     </Col>
                 </Row>
             </div>
@@ -68,15 +89,34 @@ const Detail = ({boards, selectedItem}) =>
         </Col>
       </Row>
       <Row>
-          {listList}
+        {listList}
         <Col xs={3} xsOffset={0} md={3} mdOffset={0}>
-            <div className="btn new">Add new list...</div>
+            {
+                toAddList 
+                ? 
+                <div className="btn board">New board
+                    <FormGroup
+                    controlId="formBasicText"
+                    >
+                    <FormControl
+                        type="text"
+                        value={inputNewList}
+                        placeholder="Add a new list"
+                        onChange={inputNewListChange}
+                    />
+                    <FormControl.Feedback />
+                    </FormGroup>
+                    <div className="btn createBoard" onClick={addToList}>Save list</div> or <a>cancel</a>
+                </div> 
+                : 
+                <div className="btn new" onClick={changeNewList}>Add new list...</div>
+            }
         </Col>       
       </Row>
     </Grid>
   );
 }
 
-const mapToProps = ({boards, selectedItem}) => ({boards, selectedItem})
+const mapToProps = ({boards, selectedItem, toAddList, inputNewList, toAddCard, inputNewCard}) => ({boards, selectedItem, toAddList, inputNewList, toAddCard, inputNewCard})
 
 export default connect(mapToProps)(Detail);

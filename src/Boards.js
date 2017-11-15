@@ -4,7 +4,7 @@ import {Grid, Row, Col, FormGroup, FormControl, Button, Dropdown, MenuItem, Glyp
 import logo from './assets/logo.png';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
-import {addBoard, changeNewBoard, inputNewBoardChange, selectBoard} from './actions';
+import {addBoard, changeNewBoard, inputNewBoardChange, selectBoard, readAllBoards} from './actions';
 
 const Board = ({name, index, selectBoard}) =>
 (
@@ -12,15 +12,16 @@ const Board = ({name, index, selectBoard}) =>
         <NavLink to={"/detail"}><div className="btn board" onClick={selectBoard}>{name}</div></NavLink>
     </Col>
 )
-
+readAllBoards();
 const Boards = ({boards, toAddBoard, inputNewBoard}) =>
 {
-    const addToBoard = () => {  
+    const addToBoard = () => {
+        changeNewBoard();  
         addBoard(inputNewBoard);
         selectBoard(boards.length);
-     };
+    };
     const boardList = boards.map((board, index) =>(
-        <Board name={board.name} index={index} selectBoard={ () => selectBoard (index)} />
+        <Board key={index} name={board.name} index={index} selectBoard={ () => selectBoard (index)} />
     ));
   return (
     <Grid fluid={true}>
@@ -58,7 +59,7 @@ const Boards = ({boards, toAddBoard, inputNewBoard}) =>
       </Row>
       <Row>      
         {boardList}
-        <Col xs={3} xsOffset={0} md={3} mdOffset={0} onClick={changeNewBoard}>
+        <Col xs={3} xsOffset={0} md={3} mdOffset={0}>
             {
                 toAddBoard 
                 ? 
@@ -80,7 +81,7 @@ const Boards = ({boards, toAddBoard, inputNewBoard}) =>
                     
                 </div> 
                 : 
-                <div className="btn new">Add new board...</div>
+                <div className="btn new" onClick={changeNewBoard}>Add new board...</div>
             }
         </Col>
       </Row>
