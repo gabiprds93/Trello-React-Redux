@@ -17,6 +17,7 @@ const Detail = ({boards, selectedItem, toAddList, inputNewList, toAddCard, input
     }
     console.log("boards",boards);
     console.log("selected", selectedItem);
+    console.log("lists", boards[selectedItem].lists);    
     const listList = boards[selectedItem].lists.map((list, index) => {
         const listCard = list.cards.map((card, index) => (
             <Row key={index}>

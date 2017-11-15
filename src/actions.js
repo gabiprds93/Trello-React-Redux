@@ -15,11 +15,15 @@ const snapshotToArray = snapshot =>
 {
     let boards = [];
     snapshot.forEach(childSnapshot => {
+       console.log("childSnapshot", childSnapshot);
+       
        let item = childSnapshot.val();
        console.log("item", item);
        let key = childSnapshot.key;
        item.id = key;
-       item.lists = [];
+       console.log("item.lists", item.lists);
+       if(!item.lists)
+        item.lists = [];
        boards.push( item );
     });
     store.setState({
@@ -47,7 +51,7 @@ export async function addBoard(name)
         lists: [],
     };
     // console.log("newBoards1", newBoards);
-    const res = firebase.database().ref('tableros/').push (newBoards);
+    const res = firebase.database().ref('tableros').push (newBoards);
     newBoards.id = res.key;
     // console.log("newBoards1", newBoards);
     
@@ -102,7 +106,7 @@ export async function addList(name, id, selectedItem)
         cards: [],
     };
     // console.log("newBoards1", newBoards);
-    const res = await firebase.database().ref('tableros/').child(id).push (newList);
+    const res = firebase.database().ref('tableros').child(id).child('lists').push(newList);
     newList.id = res.key;
     // console.log("newBoards1", newBoards);
     
