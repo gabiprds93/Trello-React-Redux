@@ -23,6 +23,7 @@ const Boards = ({boards, toAddBoard, inputNewBoard}) =>
     const boardList = boards.map((board, index) =>(
         <Board key={index} name={board.name} index={index} selectBoard={ () => selectBoard (index)} />
     ));
+    console.log("tableros");
   return (
     <Grid fluid={true}>
       <Row className="header">

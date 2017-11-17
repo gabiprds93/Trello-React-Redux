@@ -15,17 +15,26 @@ const SignIn = () =>
       </Row>
       <Row>
         <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
-          <form>
+          <form onSubmit={
+            e => {
+               e.preventDefault();
+              //  signIn ( this.emailInputRef.value,  this.passwordInputRef.value)
+              console.log("Sdasfsdfsd");
+              console.log(this.input.value);
+            }
+          }>
             <FormGroup
               controlId="formBasicText"
               validationState=""
             >
-              <FormControl
+              <FormControl inputRef={ref => { this.input = ref; }}
                 type="text"
-                value=""
+                // value=""
                 placeholder="Email"
                 onChange=""
+                // inputRef = { e => this.passwordInputRef = e}
               />
+              {console.log(this.passwordInputRef)}
               <FormControl.Feedback />
             </FormGroup>
             <FormGroup
@@ -40,11 +49,11 @@ const SignIn = () =>
               />
               <FormControl.Feedback />
             </FormGroup>
-            <NavLink to={"/boards"}>
+            {/* <NavLink to={"/boards"}> */}
               <Button type="submit" bsSize="large" block>
                 Sign in
               </Button>
-            </NavLink>
+            {/* </NavLink> */}
           </form>
         </Col>
       </Row>

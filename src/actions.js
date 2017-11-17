@@ -11,26 +11,40 @@ messagingSenderId: "648141349493"
 };
 firebase.initializeApp(config);
 
-const snapshotToArray = snapshot => 
+const snapshotToArray = (snapshot) => 
 {
     let boards = [];
-    snapshot.forEach(childSnapshot => {
-       console.log("childSnapshot", childSnapshot);
-       
-       let item = childSnapshot.val();
-       console.log("item", item);
-       let key = childSnapshot.key;
-       item.id = key;
-       console.log("item.lists", item.lists);
-       if(!item.lists)
-        item.lists = [];
-       boards.push( item );
+    snapshot.forEach(childSnapshot => 
+    {
+        let item = childSnapshot.val();
+        console.log("item", item);
+        let key = childSnapshot.key;
+        item.id = key;
+        console.log("item.lists", item.lists);
+        firebase.database().ref('tableros/' + key + '/lists').once('value').then(res => 
+        {
+            console.log("res", res);
+            const lists = res;
+            let listObjs = [];
+            lists.forEach(item => {
+                let obj = item.val();
+                obj.id = item.key;
+                listObjs.push(obj);
+            })
+            console.log("listObjs", listObjs);            
+            item.lists = listObjs; 
+            console.log("item.lists3", item.lists);
+            item.lists.map((list, index) => {
+                return list.cards = [];
+            })    
+        console.log("boards", store.getState().boards);        
+        }); 
+        boards.push( item );
     });
     store.setState({
         boards: boards
     }) 
-    // console.log("boards", store.getState().boards);        
-};
+}
  
 export const readAllBoards = () =>
 {
@@ -99,14 +113,24 @@ export async function addList(name, id, selectedItem)
 {
     let boards = [...store.getState().boards];
     let inputNewList = store.getState().inputNewList;
-    let toAddList = store.getState().toAddList;    
-    
+    let toAddList = store.getState().toAddList;
+    let key;
+    if(boards[selectedItem].lists.length)
+    {
+        key = boards[selectedItem].lists.length;
+        console.log("key", key);
+    }
+    else
+    {
+        key = 0;
+    }
     let newList = {
+        id: key,
         name: name,
         cards: [],
     };
     // console.log("newBoards1", newBoards);
-    const res = firebase.database().ref('tableros').child(id).child('lists').push(newList);
+    const res = firebase.database().ref('tableros').child(id).child('lists/').push(newList);
     newList.id = res.key;
     // console.log("newBoards1", newBoards);
     
