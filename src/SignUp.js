@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import './App.css';
 import {Grid, Row, Col, FormGroup, FormControl, Button} from 'react-bootstrap';
 import logo from './assets/logo.png';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Redirect} from 'react-router-dom';
+import {connect} from 'redux-zero/react'
+import {signIn, signOut, signUp} from './actions'
 
-const SignUp = () =>
+const SignUp = ({successLogin}) =>
 {
   return (
     <Grid>
+      {
+        successLogin  && <Redirect to="/boards" />
+      }
       <Row>
         <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
           <img src={logo} className="" alt="logo" />
@@ -15,16 +20,22 @@ const SignUp = () =>
       </Row>
       <Row>
         <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
-          <form>
+          <form onSubmit =  
+            {
+              e => 
+              {
+                e.preventDefault();
+                signUp(this.inputFirstName.value, this.inputLastName.value, this.inputEmail.value, this.inputPassword.value, this.inputConfirmPassword.value) 
+              }
+            }>
             <FormGroup
               controlId="formBasicText"
               validationState=""
             >
               <FormControl
+                inputRef={ref => {this.inputFirstName = ref}}             
                 type="text"
-                value=""
                 placeholder="First Name"
-                onChange=""
               />
               <FormControl.Feedback />
             </FormGroup>
@@ -33,10 +44,9 @@ const SignUp = () =>
               validationState=""
             >
               <FormControl
+                inputRef={ref => {this.inputLastName = ref}}                
                 type="text"
-                value=""
                 placeholder="Last Name"
-                onChange=""
               />
               <FormControl.Feedback />
             </FormGroup>
@@ -45,10 +55,9 @@ const SignUp = () =>
               validationState=""
             >
               <FormControl
+                inputRef={ref => {this.inputEmail = ref}}                
                 type="text"
-                value=""
                 placeholder="Email"
-                onChange=""
               />
               <FormControl.Feedback />
             </FormGroup>
@@ -57,10 +66,9 @@ const SignUp = () =>
               validationState=""
             >
               <FormControl
+                inputRef={ref => {this.inputPassword = ref}}                
                 type="text"
-                value=""
                 placeholder="Password"
-                onChange=""
               />
               <FormControl.Feedback />
             </FormGroup>
@@ -69,10 +77,9 @@ const SignUp = () =>
               validationState=""
             >
               <FormControl
+                inputRef={ref => {this.inputConfirmPassword = ref}}                
                 type="text"
-                value=""
                 placeholder="Confirm Password"
-                onChange=""
               />
               <FormControl.Feedback />
             </FormGroup>
@@ -91,4 +98,5 @@ const SignUp = () =>
   );
 }
 
-export default SignUp;
+const mapToProps = ({successLogin}) => ({successLogin}) 
+export default connect(mapToProps)(SignUp);

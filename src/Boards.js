@@ -4,7 +4,7 @@ import {Grid, Row, Col, FormGroup, FormControl, Button, Dropdown, MenuItem, Glyp
 import logo from './assets/logo.png';
 import {NavLink} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
-import {addBoard, changeNewBoard, inputNewBoardChange, selectBoard, readAllBoards} from './actions';
+import {signOut, addBoard, changeNewBoard, inputNewBoardChange, selectBoard, readAllBoards} from './actions';
 
 const Board = ({name, index, selectBoard}) =>
 (
@@ -48,7 +48,7 @@ const Boards = ({boards, toAddBoard, inputNewBoard}) =>
             <div className="btn headerElement">John Doe</div>
         </Col>
         <Col xs={1} xsOffset={0} md={1} mdOffset={0}>
-            <div className="btn headerElement">
+            <div className="btn headerElement" onClick = {signOut}>
                 <NavLink to={"/signin"}><i className="fa fa-sign-out" aria-hidden="true"></i> Sign out</NavLink>
             </div>
         </Col>

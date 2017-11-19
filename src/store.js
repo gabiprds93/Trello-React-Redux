@@ -28,7 +28,16 @@ let BOARDS =
     // }
 ]
 
-const initialState = {
+const initialState = 
+{
+    successLogin : false,    
+    user: 
+    {
+        id: null,
+        email: null,
+        firstName: null,
+        lastName: null,              
+    },
     boards: BOARDS,
     selectedItem : -1,
     toAddBoard: false,

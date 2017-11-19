@@ -1,15 +1,67 @@
 import store from './store';
-import firebase from 'firebase';
-// Initialize Firebase
-var config = {
-apiKey: "AIzaSyDMg_E_HmXrtp_SKiuisYQ7UpQj9dfWIIg",
-authDomain: "trello-react-redux.firebaseapp.com",
-databaseURL: "https://trello-react-redux.firebaseio.com",
-projectId: "trello-react-redux",
-storageBucket: "trello-react-redux.appspot.com",
-messagingSenderId: "648141349493"
-};
-firebase.initializeApp(config);
+import {auth, database} from './firebase';
+
+export function signUp (firstName, lastName, email, password, confirmPassword) 
+{
+    console.log ('signUp' + firstName + lastName + email + password + confirmPassword);
+    auth.createUserWithEmailAndPassword(email, password).then(user => 
+    {
+        let newUser = 
+        {
+            firstName, lastName, email
+        }
+        database.ref('users/' + user.uid).set(newUser);   
+
+        // database.ref ('users/' + user.uid + '/options').update ( 'option1, option2, option3...');   
+        //  database.ref ('users/').push (newuser);   
+        
+        database.ref('users/' + user.uid).once('value').then(res => 
+        {
+            const fullUserInfo = res.val(); 
+            console.log ('full info ', fullUserInfo);
+            store.setState({
+                user: 
+                {
+                    id : user.uid,
+                    email :  fullUserInfo.email,
+                    firstName :  fullUserInfo.firstName,
+                    lastName :  fullUserInfo.lasName,              
+                }
+            })
+        })
+    })
+}
+
+export function signOut () 
+{
+    auth.signOut();
+    store.setState({
+        successLogin : false,
+        user: 
+        {
+            id :'',
+            email :  ''
+        }
+    })
+}
+
+// export function signIn (user, pass) 
+// {
+//     auth.signInWithEmailAndPassword(user, pass).then (userObj => {
+
+//     })        
+// }
+
+auth.onAuthStateChanged(user => {
+    if (user) {
+       console.log('user', user);
+       let usersRef = database.ref('/users');
+       let userRef = usersRef.child(user.uid);
+       store.setState ( {
+          successLogin : true
+       })
+    }
+ });
 
 const snapshotToArray = (snapshot) => 
 {
@@ -21,7 +73,7 @@ const snapshotToArray = (snapshot) =>
         let key = childSnapshot.key;
         item.id = key;
         console.log("item.lists", item.lists);
-        firebase.database().ref('tableros/' + key + '/lists').once('value').then(res => 
+        database.ref('tableros/' + key + '/lists').once('value').then(res => 
         {
             console.log("res", res);
             const lists = res;
@@ -48,7 +100,7 @@ const snapshotToArray = (snapshot) =>
  
 export const readAllBoards = () =>
 {
-    firebase.database()
+    database
         .ref('tableros/')
         .on('value', (res) => {
             snapshotToArray(res)
@@ -65,7 +117,7 @@ export async function addBoard(name)
         lists: [],
     };
     // console.log("newBoards1", newBoards);
-    const res = firebase.database().ref('tableros').push (newBoards);
+    const res = database.ref('tableros').push (newBoards);
     newBoards.id = res.key;
     // console.log("newBoards1", newBoards);
     
@@ -130,7 +182,7 @@ export async function addList(name, id, selectedItem)
         cards: [],
     };
     // console.log("newBoards1", newBoards);
-    const res = firebase.database().ref('tableros').child(id).child('lists/').push(newList);
+    const res = database.ref('tableros').child(id).child('lists/').push(newList);
     newList.id = res.key;
     // console.log("newBoards1", newBoards);
     
@@ -173,7 +225,7 @@ export async function addCard(name, id, selectedItem)
         cards: [],
     };
     // console.log("newBoards1", newBoards);
-    const res = await firebase.database().ref('tableros/').child(id).push (newList);
+    const res = await database.ref('tableros/').child(id).push (newList);
     newList.id = res.key;
     // console.log("newBoards1", newBoards);
     

@@ -20,19 +20,17 @@ const SignIn = () =>
                e.preventDefault();
               //  signIn ( this.emailInputRef.value,  this.passwordInputRef.value)
               console.log("Sdasfsdfsd");
-              console.log(this.input.value);
+              console.log(this.inputEmail.value);
             }
           }>
             <FormGroup
               controlId="formBasicText"
               validationState=""
             >
-              <FormControl inputRef={ref => { this.input = ref; }}
+              <FormControl 
+                inputRef={ref => {this.inputEmail = ref}}
                 type="text"
-                // value=""
                 placeholder="Email"
-                onChange=""
-                // inputRef = { e => this.passwordInputRef = e}
               />
               {console.log(this.passwordInputRef)}
               <FormControl.Feedback />
@@ -42,10 +40,9 @@ const SignIn = () =>
               validationState=""
             >
               <FormControl
+                inputRef={ref => {this.inputPassword = ref}}                
                 type="text"
-                value=""
                 placeholder="Password"
-                onChange=""
               />
               <FormControl.Feedback />
             </FormGroup>
