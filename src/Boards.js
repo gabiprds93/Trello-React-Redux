@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import {Grid, Row, Col, FormGroup, FormControl, Button, Dropdown, MenuItem, Glyphicon} from 'react-bootstrap';
 import logo from './assets/logo.png';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Redirect} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
-import {signOut, addBoard, changeNewBoard, inputNewBoardChange, selectBoard, readAllBoards} from './actions';
+import {addBoard, changeNewBoard, inputNewBoardChange, selectBoard, readAllBoards} from './actions';
+import HeaderBoardsDetail from './HeaderBoardsDetail';
 
 const Board = ({name, index, selectBoard}) =>
 (
@@ -12,84 +13,65 @@ const Board = ({name, index, selectBoard}) =>
         <NavLink to={"/detail"}><div className="btn board" onClick={selectBoard}>{name}</div></NavLink>
     </Col>
 )
-readAllBoards();
-const Boards = ({boards, toAddBoard, inputNewBoard}) =>
+const Boards = ({successLogin, user, toAddBoard}) =>
 {
+    let boardList;
+    console.log("user", user);    
+    console.log("user.boards", user.boards);
     const addToBoard = () => {
         changeNewBoard();  
-        addBoard(inputNewBoard);
-        selectBoard(boards.length);
+        addBoard(this.inputNewBoard.value);
+        selectBoard(user.boards.length);
     };
-    const boardList = boards.map((board, index) =>(
-        <Board key={index} name={board.name} index={index} selectBoard={ () => selectBoard (index)} />
-    ));
+    console.log(user.boards.length);
+    if(user.boards.length)
+    {
+        boardList = user.boards.map((board, index) =>(
+            <Board key={index} name={board.name} index={index} selectBoard={ () => selectBoard (index)} />
+        ));
+    }
     console.log("tableros");
-  return (
-    <Grid fluid={true}>
-      <Row className="header">
-        <Col xs={1} xsOffset={0} md={1} mdOffset={0}>
-        <Dropdown id="dropdown-custom-1">
-            <Dropdown.Toggle>
-                <i className="fa fa-columns" aria-hidden="true"></i> Boards
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="super-colors">
-                <MenuItem eventKey="1">Action</MenuItem>
-                <MenuItem eventKey="2">Another action</MenuItem>
-                <MenuItem eventKey="3" active>Active Item</MenuItem>
-                <MenuItem divider />
-                <MenuItem eventKey="4">Separated link</MenuItem>
-            </Dropdown.Menu>
-        </Dropdown>
-        </Col>
-        <Col xs={2} xsOffset={4} md={2} mdOffset={4}>
-            <img width={150} src={logo} className="" alt="logo" />
-        </Col>
-        <Col xs={1} xsOffset={3} md={1} mdOffset={3}>
-            <div className="btn headerElement">John Doe</div>
-        </Col>
-        <Col xs={1} xsOffset={0} md={1} mdOffset={0}>
-            <div className="btn headerElement" onClick = {signOut}>
-                <NavLink to={"/signin"}><i className="fa fa-sign-out" aria-hidden="true"></i> Sign out</NavLink>
-            </div>
-        </Col>
-        </Row>
-      <Row>
-        <Col xs={2} xsOffset={0} md={2} mdOffset={0} className="myBoards">
-            <i className="fa fa-user" aria-hidden="true"></i> My Boards
-        </Col>
-      </Row>
-      <Row>      
-        {boardList}
-        <Col xs={3} xsOffset={0} md={3} mdOffset={0}>
+    return (
+        <Grid fluid={true}>
             {
-                toAddBoard 
-                ? 
-                <div className="btn board">New board
-                    <FormGroup
-                    controlId="formBasicText"
-                    >
-                    <FormControl
-                        type="text"
-                        value={inputNewBoard}
-                        placeholder="Board name"
-                        onChange={inputNewBoardChange}
-                    />
-                    <FormControl.Feedback />
-                    </FormGroup>
-                    <NavLink to={"/detail"}>
-                        <div className="btn createBoard" onClick={addToBoard}>Create board</div>
-                    </NavLink> or <a>cancel</a>
-                    
-                </div> 
-                : 
-                <div className="btn new" onClick={changeNewBoard}>Add new board...</div>
+                !successLogin  && <Redirect to = "/signin" />
             }
-        </Col>
-      </Row>
-    </Grid>
-  );
+            <HeaderBoardsDetail/>  
+            <Row>
+                <Col xs={2} xsOffset={0} md={2} mdOffset={0} className="myBoards">
+                    <i className="fa fa-user" aria-hidden="true"></i> My Boards
+                </Col>
+            </Row>
+            <Row>      
+                {boardList}
+                <Col xs={3} xsOffset={0} md={3} mdOffset={0}>
+                    {
+                        toAddBoard 
+                        ? 
+                        <div className="btn board">New board
+                            <FormGroup
+                            controlId="formBasicText"
+                            >
+                            <FormControl
+                                inputRef={ref => {this.inputNewBoard = ref}}                                                
+                                type="text"
+                                placeholder="Board name"
+                            />
+                            <FormControl.Feedback />
+                            </FormGroup>
+                            {/* <NavLink to={"/detail"}> */}
+                                <div className="btn createBoard" onClick={addToBoard}>Create board</div>
+                            {/* </NavLink> or <a>cancel</a> */}
+                            
+                        </div> 
+                        : 
+                        <div className="btn new" onClick={changeNewBoard}>Add new board...</div>
+                    }
+                </Col>
+            </Row>
+        </Grid>
+    );
 }
 
-const mapToProps = ({boards, toAddBoard, inputNewBoard}) => ({boards, toAddBoard, inputNewBoard})
-
+const mapToProps = ({successLogin, user, boards, toAddBoard}) => ({successLogin, user, boards, toAddBoard})
 export default connect(mapToProps)(Boards);

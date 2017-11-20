@@ -36,15 +36,14 @@ const initialState =
         id: null,
         email: null,
         firstName: null,
-        lastName: null,              
+        lastName: null,
+        boards: [],    
+        toAddCard: false,
+    
     },
-    boards: BOARDS,
     selectedItem : -1,
     toAddBoard: false,
-    inputNewBoard: "",
     toAddList: false,
-    inputNewList: "",
-    toAddCard: false,
     inputNewCard: "",
 }
 

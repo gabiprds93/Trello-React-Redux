@@ -2,25 +2,25 @@ import React, { Component } from 'react';
 import './App.css';
 import {Grid, Row, Col, FormGroup, FormControl, Button} from 'react-bootstrap';
 import logo from './assets/logo.png'
-import {NavLink} from 'react-router-dom';
+import {NavLink, Redirect} from 'react-router-dom';
+import {connect} from 'redux-zero/react'
+import {signIn, signOut, signUp} from './actions'
+import HeaderLoginRegister from './HeaderLoginRegister'
 
-const SignIn = () =>
+const SignIn = ({successLogin}) =>
 {
   return (
-    <Grid>
-      <Row className="">
-        <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
-          <img src={logo} className="" alt="logo" />
-        </Col>
-      </Row>
+    <Grid className="signIn">
+      {
+        successLogin  && <Redirect to = "/boards" />
+      }
+      <HeaderLoginRegister/>
       <Row>
-        <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
+        <Col xs={4} xsOffset={4} sm={4} smOffset={4} md={4} mdOffset={4} lg={4} lgOffset={4}>
           <form onSubmit={
             e => {
                e.preventDefault();
-              //  signIn ( this.emailInputRef.value,  this.passwordInputRef.value)
-              console.log("Sdasfsdfsd");
-              console.log(this.inputEmail.value);
+               signIn(this.inputEmail.value,  this.inputPassword.value);
             }
           }>
             <FormGroup
@@ -32,7 +32,6 @@ const SignIn = () =>
                 type="text"
                 placeholder="Email"
               />
-              {console.log(this.passwordInputRef)}
               <FormControl.Feedback />
             </FormGroup>
             <FormGroup
@@ -54,7 +53,7 @@ const SignIn = () =>
           </form>
         </Col>
       </Row>
-      <Row>
+      <Row className="toSignUp text-center">
         <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
           <NavLink to={"/signup"}>Create new account</NavLink>
         </Col>       
@@ -63,4 +62,5 @@ const SignIn = () =>
   );
 }
 
-export default SignIn;
+const mapToProps = ({successLogin}) => ({successLogin}) 
+export default connect(mapToProps)(SignIn);

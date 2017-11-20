@@ -3,8 +3,9 @@ import './App.css';
 import {Grid, Row, Col, FormGroup, FormControl, Button} from 'react-bootstrap';
 import logo from './assets/logo.png';
 import {NavLink, Redirect} from 'react-router-dom';
-import {connect} from 'redux-zero/react'
-import {signIn, signOut, signUp} from './actions'
+import {connect} from 'redux-zero/react';
+import {signIn, signOut, signUp} from './actions';
+import HeaderLoginRegister from './HeaderLoginRegister'
 
 const SignUp = ({successLogin}) =>
 {
@@ -13,11 +14,7 @@ const SignUp = ({successLogin}) =>
       {
         successLogin  && <Redirect to="/boards" />
       }
-      <Row>
-        <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
-          <img src={logo} className="" alt="logo" />
-        </Col>
-      </Row>
+      <HeaderLoginRegister/>
       <Row>
         <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
           <form onSubmit =  
@@ -89,7 +86,7 @@ const SignUp = ({successLogin}) =>
           </form>
         </Col>
       </Row>
-      <Row>
+      <Row className="toSignIn text-center">
         <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
             <NavLink to={"/signin"}>Sign in</NavLink>
         </Col>       

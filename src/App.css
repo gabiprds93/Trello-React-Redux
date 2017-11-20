@@ -2,6 +2,20 @@ body
 {
   background-color: #89609E;
 }
+.headerLoginRegister .logo
+{
+  margin-top: 50px;
+  margin-bottom: 20px;    
+  width: 60%;
+}
+.toSignUp, .toSignIn
+{
+  margin-top: 20px;
+}
+.toSignUp a, .toSignIn a 
+{
+  color: #C4AFCE;
+}
 .header
 {
   background-color: #745286;

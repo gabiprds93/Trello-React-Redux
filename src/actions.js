@@ -1,5 +1,22 @@
 import store from './store';
-import {auth, database} from './firebase';
+// import {auth, database} from './firebase';
+import firebase from 'firebase';
+
+// Initialize Firebase
+var config = 
+{
+    apiKey: "AIzaSyDMg_E_HmXrtp_SKiuisYQ7UpQj9dfWIIg",
+    authDomain: "trello-react-redux.firebaseapp.com",
+    databaseURL: "https://trello-react-redux.firebaseio.com",
+    projectId: "trello-react-redux",
+    storageBucket: "trello-react-redux.appspot.com",
+    messagingSenderId: "648141349493"
+};
+
+firebase.initializeApp(config);
+const database = firebase.database();
+const auth = firebase.auth();
+const storage = firebase.storage();
 
 export function signUp (firstName, lastName, email, password, confirmPassword) 
 {
@@ -8,7 +25,9 @@ export function signUp (firstName, lastName, email, password, confirmPassword)
     {
         let newUser = 
         {
-            firstName, lastName, email
+            email: email,            
+            firstName: firstName,
+            lastName: lastName,
         }
         database.ref('users/' + user.uid).set(newUser);   
 
@@ -17,7 +36,8 @@ export function signUp (firstName, lastName, email, password, confirmPassword)
         
         database.ref('users/' + user.uid).once('value').then(res => 
         {
-            const fullUserInfo = res.val(); 
+            let fullUserInfo = res.val();
+            fullUserInfo.boards = [];
             console.log ('full info ', fullUserInfo);
             store.setState({
                 user: 
@@ -25,7 +45,8 @@ export function signUp (firstName, lastName, email, password, confirmPassword)
                     id : user.uid,
                     email :  fullUserInfo.email,
                     firstName :  fullUserInfo.firstName,
-                    lastName :  fullUserInfo.lasName,              
+                    lastName :  fullUserInfo.lastName,              
+                    boards: fullUserInfo.boards,
                 }
             })
         })
@@ -39,47 +60,92 @@ export function signOut ()
         successLogin : false,
         user: 
         {
-            id :'',
-            email :  ''
+            id : "",
+            email :  "",
+            firstName :  "",
+            lastName :  "", 
+            boards: [],
         }
     })
 }
 
-// export function signIn (user, pass) 
-// {
-//     auth.signInWithEmailAndPassword(user, pass).then (userObj => {
+export function signIn (user, password) 
+{
+    auth.signInWithEmailAndPassword(user, password).then(userObj => 
+    {
+        database.ref('users/' + userObj.uid).once('value').then(res => 
+        {
+            const fullUserInfo = res.val(); 
+            console.log ('full info ', fullUserInfo);
+            if(!fullUserInfo.boards)
+                fullUserInfo.boards = [];
+            // database.ref('users/' + userObj.uid + '/boards').once('value').then(res =>
+            // {
+            //     let boards = res;
+            //     let boardObjs = [];
+            //     boards.forEach(item => {
+            //         let obj = item.val();
+            //         console.log("obj", obj)
+            //         obj.id = item.key;
+            //         boardObjs.push(obj);
+            //     })
+            //     console.log("boardObjs", boardObjs);            
+            //     fullUserInfo.boards = boardObjs;
+            //     console.log("fullUserInfo.boards", fullUserInfo.boards);                            
+            // console.log("user", store.getState().user);                                        
+            
+            // })
+               
+        
+            store.setState({
+                user: 
+                {
+                    id : userObj.uid,
+                    email :  fullUserInfo.email,
+                    firstName :  fullUserInfo.firstName,
+                    lastName :  fullUserInfo.lastName,  
+                    boards: fullUserInfo.boards,             
+                }
+            })
+            console.log("xxxxxxxxxxxxx")
+            console.log("user", store.getState().user);                                        
+            readAllBoards(); 
+        })
+    })
+}
 
-//     })        
-// }
-
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(user => 
+{
     if (user) {
-       console.log('user', user);
-       let usersRef = database.ref('/users');
-       let userRef = usersRef.child(user.uid);
-       store.setState ( {
-          successLogin : true
-       })
+        console.log('user', user);
+        let usersRef = database.ref('users');
+        let userRef = usersRef.child(user.uid);
+        store.setState({
+            successLogin : true
+        })
     }
  });
 
-const snapshotToArray = (snapshot) => 
+async function snapshotToArray (snapshot)  
 {
+    let user = store.getState().user;
     let boards = [];
     snapshot.forEach(childSnapshot => 
     {
+        console.log("childSnapshot", childSnapshot);        
         let item = childSnapshot.val();
         console.log("item", item);
         let key = childSnapshot.key;
         item.id = key;
         console.log("item.lists", item.lists);
-        database.ref('tableros/' + key + '/lists').once('value').then(res => 
+        firebase.database().ref('users/' + user.id + '/boards/'+ key + '/lists').once('value').then(res => 
         {
             console.log("res", res);
             const lists = res;
             let listObjs = [];
             lists.forEach(item => {
                 let obj = item.val();
+                console.log("obj", obj)
                 obj.id = item.key;
                 listObjs.push(obj);
             })
@@ -89,19 +155,29 @@ const snapshotToArray = (snapshot) =>
             item.lists.map((list, index) => {
                 return list.cards = [];
             })    
-        console.log("boards", store.getState().boards);        
+            console.log("boards", store.getState().user.boards);        
         }); 
-        boards.push( item );
+        boards.push(item);
     });
+    console.log("sdfdfdsfsdfsd")
     store.setState({
-        boards: boards
+        user:
+        {
+            id : user.id,
+            email :  user.email,
+            firstName :  user.firstName,
+            lastName :  user.lastName,  
+            boards: boards    
+        }
     }) 
 }
  
 export const readAllBoards = () =>
 {
-    database
-        .ref('tableros/')
+    let user = store.getState().user;    
+    console.log("user readAllBoards", user)
+    firebase.database()
+        .ref('users/' + user.id + '/boards')
         .on('value', (res) => {
             snapshotToArray(res)
         });
@@ -109,25 +185,31 @@ export const readAllBoards = () =>
 
 export async function addBoard(name)
 {
-    let boards = [...store.getState().boards];
-    let inputNewBoard = store.getState().inputNewBoard;
+    let user = store.getState().user;
+    // let inputNewBoard = store.getState().inputNewBoard;
     
     let newBoards = {
-        name: name,
-        lists: [],
+        name: name
+        // lists: [],
     };
-    // console.log("newBoards1", newBoards);
-    const res = database.ref('tableros').push (newBoards);
-    newBoards.id = res.key;
+    console.log("user add", user);
+    const res = database.ref('users').child(user.id).child('boards').push(newBoards);
+    // newBoards.id = res.key;
     // console.log("newBoards1", newBoards);
     
-    newBoards = boards.concat(newBoards);
-    inputNewBoard = "";
+    newBoards = user.boards.concat(newBoards);
+    // inputNewBoard = "";
     store.setState({
-        boards: newBoards,
-        inputNewBoard: inputNewBoard,
+        user:
+        {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            boards: newBoards,            
+        }
     });
-    // console.log("newBoards1", newBoards);
+    console.log("user", store.getState().user);
     console.log("toadd", store.getState().toAddBoard);    
 }
 
@@ -147,13 +229,6 @@ export const changeNewBoard = () =>
     });
 }
 
-export const inputNewBoardChange = (e) =>
-{
-    store.setState({
-        inputNewBoard: e.target.value,
-    });
-}
-
 export const selectBoard = (index) => 
 {
     store.setState({
@@ -163,39 +238,43 @@ export const selectBoard = (index) =>
 
 export async function addList(name, id, selectedItem)
 {
-    let boards = [...store.getState().boards];
-    let inputNewList = store.getState().inputNewList;
+    let user = store.getState().user;
     let toAddList = store.getState().toAddList;
     let key;
-    if(boards[selectedItem].lists.length)
-    {
-        key = boards[selectedItem].lists.length;
-        console.log("key", key);
-    }
-    else
-    {
-        key = 0;
-    }
+    // if(boards[selectedItem].lists.length)
+    // {
+    //     key = boards[selectedItem].lists.length;
+    //     console.log("key", key);
+    // }
+    // else
+    // {
+    //     key = 0;
+    // }
     let newList = {
-        id: key,
+        // id: key,
         name: name,
         cards: [],
     };
     // console.log("newBoards1", newBoards);
-    const res = database.ref('tableros').child(id).child('lists/').push(newList);
+    const res = database.ref('users').child(user.id).child('boards/').child(id).child('lists/').push(newList);
     newList.id = res.key;
     // console.log("newBoards1", newBoards);
     
-    newList = boards[selectedItem].lists.push(newList);
-    console.log("boards11", boards[selectedItem]);    
+    newList = user.boards[selectedItem].lists.push(newList);
+    console.log("boards11", user.boards[selectedItem]);    
     toAddList = false;
-    inputNewList = "";
     store.setState({
-        boards: boards,
+        user:
+        {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            boards: user.boards,    
+        },
         toAddList: toAddList,
-        inputNewList: inputNewList,
     });
-    console.log("boards", boards);
+    console.log("boards", user.boards);
     console.log("toadd", store.getState().toAddBoard);    
 }
 
@@ -204,13 +283,6 @@ export const changeNewList = () =>
     let newtoAddList = true;
     store.setState({
         toAddList: newtoAddList,
-    });
-}
-
-export const inputNewListChange = (e) =>
-{
-    store.setState({
-        inputNewList: e.target.value,
     });
 }
 
