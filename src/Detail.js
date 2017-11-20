@@ -4,7 +4,7 @@ import {Grid, Row, Col, FormGroup, FormControl, Button, Dropdown, MenuItem, Glyp
 import logo from './assets/logo.png';
 import {NavLink, Redirect} from 'react-router-dom';
 import {connect} from 'redux-zero/react';
-import {addList, changeNewList, inputNewListChange, addCard, changeNewCard, inputNewCardChange} from './actions';
+import {addList, changeNewList, inputNewListChange, addCard, changeNewCard, inputNewCardChange, selectBoard} from './actions';
 import HeaderBoardsDetail from './HeaderBoardsDetail';
 
 const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAddCard, inputNewCard}) =>
@@ -14,9 +14,12 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
         addList(this.inputNewList.value, user.boards[selectedItem].id, selectedItem);
         // selectBoard(boards.length);
     };
-    const addToCard = () => {
-        addCard(inputNewCard);
-    }
+    // const addToCard = () => {
+    //     addCard(this.inputNewCard.value, user.boards[selectedItem].id, selectedItem);
+    // }
+    // const newCard = () => {
+    //     changeNewCard()
+    // }
     console.log("boards", user.boards);
     console.log("selected", selectedItem);
     // console.log("lists", user.boards[selectedItem].lists);  
@@ -26,7 +29,7 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
             const listCard = list.cards.map((card, index) => (
                 <Row key={index}>
                     <Col xs={12} md={12}>
-                        <div className="card">{card}</div>
+                        <div className="card">{card.name}</div>
                     </Col>
                 </Row>
             ));
@@ -39,19 +42,22 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
                             </Col>
                         </Row>
                         {listCard}
-                        <Row className="btn">
-                            <Col xs={12} md={12}>
+                        <Row className="btn addCard">
+                            <Col xs={12} md={12} className="addCard">
                             {
-                                toAddCard
+                                list.toAddCard
                                 ? 
-                                <div className="btn board">
+                                <div className="btn board addCard">
                                     <FormGroup controlId="formControlsTextarea">
-                                        <FormControl componentClass="textarea" value={inputNewCard} onChange={inputNewCardChange} />
+                                        <FormControl 
+                                            inputRef={ref => {this.inputNewCard = ref}}                            
+                                            componentClass="textarea" 
+                                        />
                                     </FormGroup>
-                                    <div className="btn createBoard" onClick={addToCard}>Add</div> or <a>cancel</a>
+                                    <div className="btn createBoard" onClick={addToCard => addCard(this.inputNewCard.value, selectedItem, list.id, index)}>Add</div> or <a>cancel</a>
                                 </div> 
                                 : 
-                                <div className="btn newCard" onClick={changeNewCard}>Add new card...</div>
+                                <div className="btn newCard" onClick={newCard => changeNewCard(selectedItem, index)}>Add new card...</div>
                             }                      
                             </Col>
                         </Row>

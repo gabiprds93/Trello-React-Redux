@@ -60,8 +60,8 @@ const Boards = ({successLogin, user, toAddBoard}) =>
                             <FormControl.Feedback />
                             </FormGroup>
                             {/* <NavLink to={"/detail"}> */}
-                                <div className="btn createBoard" onClick={addToBoard}>Create board</div>
-                            {/* </NavLink> or <a>cancel</a> */}
+                                <div className="btn createBoard" onClick={addToBoard}>Create board</div> 
+                            {/* </NavLink>  */} or <a>cancel</a>
                             
                         </div> 
                         : 

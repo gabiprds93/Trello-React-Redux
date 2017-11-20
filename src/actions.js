@@ -138,7 +138,7 @@ async function snapshotToArray (snapshot)
         let key = childSnapshot.key;
         item.id = key;
         console.log("item.lists", item.lists);
-        firebase.database().ref('users/' + user.id + '/boards/'+ key + '/lists').once('value').then(res => 
+        database.ref('users/' + user.id + '/boards/'+ key + '/lists').once('value').then(res => 
         {
             console.log("res", res);
             const lists = res;
@@ -146,16 +146,29 @@ async function snapshotToArray (snapshot)
             lists.forEach(item => {
                 let obj = item.val();
                 console.log("obj", obj)
-                obj.id = item.key;
+                let objKey = item.key
+                obj.id = objKey;
+                database.ref('users/' + user.id + '/boards/'+ key + '/lists/' + objKey + '/cards').once('value').then(res => 
+                {
+                    const cards = res;
+                    let cardsObjs = [];
+                    cards.forEach(item => {
+                        let array = item.val();
+                        console.log("array", array);
+                        cardsObjs.push(array); 
+                    });
+                    obj.cards = cardsObjs;
+                });
                 listObjs.push(obj);
             })
             console.log("listObjs", listObjs);            
             item.lists = listObjs; 
             console.log("item.lists3", item.lists);
             item.lists.map((list, index) => {
-                return list.cards = [];
+                list.toAddCard = false;
+                list.cards = [];
             })    
-            console.log("boards", store.getState().user.boards);        
+            console.log("boards all", store.getState().user.boards);        
         }); 
         boards.push(item);
     });
@@ -286,39 +299,51 @@ export const changeNewList = () =>
     });
 }
 
-export async function addCard(name, id, selectedItem)
+export async function addCard(name, selectedItem, listId, index)
 {
-    let boards = [...store.getState().boards];
-    let inputNewCard = store.getState().inputNewCard;
-    let toAddCard = store.getState().toAddCard;    
+    let user = store.getState().user;
+    let id = user.boards[selectedItem].id;  
     
-    let newList = {
+    let newCard = {
         name: name,
-        cards: [],
     };
-    // console.log("newBoards1", newBoards);
-    const res = await database.ref('tableros/').child(id).push (newList);
-    newList.id = res.key;
+    console.log("parametros", name, selectedItem, listId, index);
+    const res = database.ref('users/').child(user.id).child('boards/').child(id).child('lists/').child(listId).child('cards/').push(newCard);
+    // newList.id = res.key;
     // console.log("newBoards1", newBoards);
     
-    newList = boards[selectedItem].lists.push(newList);
-    console.log("boards11", boards[selectedItem]);    
-    toAddCard = false;
-    inputNewCard = "";
+    newCard = user.boards[selectedItem].lists[index].cards.push(newCard);
+    console.log("boards11", user.boards[selectedItem]);    
+    user.boards[selectedItem].lists[index].toAddCard = false;
     store.setState({
-        boards: boards,
-        toAddCard: toAddCard,
-        inputNewCard: inputNewCard,
+        user:
+        {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            boards: user.boards,    
+        },
     });
-    console.log("boards", boards);
-    console.log("toadd", store.getState().toAddBoard);    
+    console.log("boards", user.boards);
+    // console.log("toadd", store.getState().toAddBoard);    
 }
 
-export const changeNewCard = () =>
+export const changeNewCard = (selectedItem, index) =>
 {
+    let user = store.getState().user;
     let newtoAddCard = true;
+    user.boards[selectedItem].lists[index].toAddCard =  newtoAddCard;
+    console.log("usesr selected", user.boards[selectedItem].lists[index]);
     store.setState({
-        toAddCard: newtoAddCard,
+        user:
+        {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            boards: user.boards,
+        }
     });
 }
 

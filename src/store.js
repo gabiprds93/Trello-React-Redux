@@ -38,12 +38,11 @@ const initialState =
         firstName: null,
         lastName: null,
         boards: [],    
-        toAddCard: false,
-    
     },
     selectedItem : -1,
     toAddBoard: false,
     toAddList: false,
+    toAddCard: false,
     inputNewCard: "",
 }
 
