@@ -64,7 +64,7 @@ const SignUp = ({successLogin}) =>
             >
               <FormControl
                 inputRef={ref => {this.inputPassword = ref}}                
-                type="text"
+                type="password"
                 placeholder="Password"
               />
               <FormControl.Feedback />
