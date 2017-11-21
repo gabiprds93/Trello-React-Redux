@@ -25,6 +25,8 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
     // console.log("lists", user.boards[selectedItem].lists);  
     if(user.boards[selectedItem])
     {
+        if(user.boards[selectedItem].lists)
+        {
         listList = user.boards[selectedItem].lists.map((list, index) => {
             const listCard = list.cards.map((card, index) => (
                 <Row key={index}>
@@ -66,6 +68,7 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
                 </Col>
             )
         })
+        }
     }
     return (
         <Grid fluid={true}>

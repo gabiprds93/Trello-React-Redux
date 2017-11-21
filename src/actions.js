@@ -33,6 +33,7 @@ export function signUp (firstName, lastName, email, password)
                     boards: fullUserInfo.boards,
                 }
             })
+            // readAllBoards();            
         })
     })
 }
@@ -186,8 +187,8 @@ export async function addBoard(name)
     // let inputNewBoard = store.getState().inputNewBoard;
     
     let newBoards = {
-        name: name
-        // lists: [],
+        name: name,
+        lists: [],
     };
     console.log("user add", user);
     const res = database.ref('users').child(user.id).child('boards').push(newBoards);
@@ -207,7 +208,8 @@ export async function addBoard(name)
         }
     });
     console.log("user", store.getState().user);
-    console.log("toadd", store.getState().toAddBoard);    
+    console.log("toadd", store.getState().toAddBoard);
+    readAllBoards();
 }
 
 export const changeNewBoard = () =>
