@@ -9,7 +9,7 @@ import HeaderBoardsDetail from './HeaderBoardsDetail';
 
 const Board = ({name, index, selectBoard}) =>
 (
-    <Col key={index} xs={3} xsOffset={0} md={3} mdOffset={0}>
+    <Col key={index} xs={4} xsOffset={0} md={3} mdOffset={0}>
         <NavLink to={"/detail"}><div className="btn board" onClick={selectBoard}>{name}</div></NavLink>
     </Col>
 )
@@ -38,13 +38,13 @@ const Boards = ({successLogin, user, toAddBoard}) =>
             }
             <HeaderBoardsDetail/>  
             <Row>
-                <Col xs={2} xsOffset={0} md={2} mdOffset={0} className="myBoards">
+                <Col xs={6} xsOffset={0} md={3} mdOffset={0} className="myBoards">
                     <i className="fa fa-user" aria-hidden="true"></i> My Boards
                 </Col>
             </Row>
             <Row>      
                 {boardList}
-                <Col xs={3} xsOffset={0} md={3} mdOffset={0}>
+                <Col xs={6} xsOffset={0} md={3} mdOffset={0}>
                     {
                         toAddBoard 
                         ? 
@@ -61,7 +61,7 @@ const Boards = ({successLogin, user, toAddBoard}) =>
                             </FormGroup>
                             {/* <NavLink to={"/detail"}> */}
                                 <div className="btn createBoard" onClick={addToBoard}>Create board</div> 
-                            {/* </NavLink>  */} or <a>cancel</a>
+                            {/* </NavLink>  or <a>cancel</a> */}
                             
                         </div> 
                         : 

@@ -1,3 +1,7 @@
+*
+{
+  /* outline: 1px solid red;   */
+}
 body
 {
   background-color: #89609E;
@@ -8,6 +12,11 @@ body
   margin-bottom: 20px;    
   width: 60%;
 }
+.headerBoardsDetail .logo
+{
+  margin: 10px;
+  width: 110%;
+}
 .toSignUp, .toSignIn
 {
   margin-top: 20px;
@@ -16,12 +25,13 @@ body
 {
   color: #C4AFCE;
 }
-.header
+.headerBoardsDetail
 {
   background-color: #745286;
 }
 .headerElement, .headerElement>a
 {
+  margin: 6px;
   background-color: #896C98;
   color:rgba(255, 255, 255, 0.5);
 }
@@ -36,6 +46,7 @@ i
 }
 .myBoards
 {
+  font-size: 25px;
   color: white;
 }
 .board, .list
@@ -45,6 +56,14 @@ i
   text-align: left;
   width: 100%;
   margin: 10px 0;
+}
+.containerList
+{
+  /* position: absolute; */
+}
+.list
+{
+  /* position: fixed; */
 }
 .new
 {
@@ -71,6 +90,7 @@ i
 {
   background-color: white;
   margin: 5px;
+  padding: 5px;
 }
 .createBoard
 {

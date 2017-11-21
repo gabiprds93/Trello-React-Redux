@@ -16,13 +16,13 @@ const SignUp = ({successLogin}) =>
       }
       <HeaderLoginRegister/>
       <Row>
-        <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
+        <Col xs={10} xsOffset={1} sm={8} smOffset={2} md={6} mdOffset={3} lg={4} lgOffset={4}>
           <form onSubmit =  
             {
               e => 
               {
                 e.preventDefault();
-                signUp(this.inputFirstName.value, this.inputLastName.value, this.inputEmail.value, this.inputPassword.value, this.inputConfirmPassword.value) 
+                signUp(this.inputFirstName.value, this.inputLastName.value, this.inputEmail.value, this.inputPassword.value) 
               }
             }>
             <FormGroup
@@ -69,7 +69,7 @@ const SignUp = ({successLogin}) =>
               />
               <FormControl.Feedback />
             </FormGroup>
-            <FormGroup
+            {/* <FormGroup
               controlId="formBasicText"
               validationState=""
             >
@@ -79,7 +79,7 @@ const SignUp = ({successLogin}) =>
                 placeholder="Confirm Password"
               />
               <FormControl.Feedback />
-            </FormGroup>
+            </FormGroup> */}
             <Button type="submit" bsSize="large" block>
               Sign up
             </Button>
@@ -87,7 +87,7 @@ const SignUp = ({successLogin}) =>
         </Col>
       </Row>
       <Row className="toSignIn text-center">
-        <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
+        <Col xs={10} xsOffset={1} sm={8} smOffset={2} md={6} mdOffset={3} lg={4} lgOffset={4}>
             <NavLink to={"/signin"}>Sign in</NavLink>
         </Col>       
       </Row>

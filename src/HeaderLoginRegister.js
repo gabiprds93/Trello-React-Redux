@@ -7,7 +7,7 @@ const HeaderLoginRegister = () =>
 {
     return(
         <Row className="headerLoginRegister text-center">
-            <Col xs={4} xsOffset={4} sm={4} smOffset={4} md={4} mdOffset={4} lg={4} lgOffset={4}>
+            <Col xs={10} xsOffset={1} sm={8} smOffset={2} md={6} mdOffset={3} lg={4} lgOffset={4}>
                 <img src={logo} className="logo" alt="logo" />
             </Col>
         </Row>

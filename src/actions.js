@@ -1,26 +1,10 @@
 import store from './store';
-// import {auth, database} from './firebase';
-import firebase from 'firebase';
+import {auth, database} from './firebase';
+// import firebase from 'firebase';
 
-// Initialize Firebase
-var config = 
+export function signUp (firstName, lastName, email, password) 
 {
-    apiKey: "AIzaSyDMg_E_HmXrtp_SKiuisYQ7UpQj9dfWIIg",
-    authDomain: "trello-react-redux.firebaseapp.com",
-    databaseURL: "https://trello-react-redux.firebaseio.com",
-    projectId: "trello-react-redux",
-    storageBucket: "trello-react-redux.appspot.com",
-    messagingSenderId: "648141349493"
-};
-
-firebase.initializeApp(config);
-const database = firebase.database();
-const auth = firebase.auth();
-const storage = firebase.storage();
-
-export function signUp (firstName, lastName, email, password, confirmPassword) 
-{
-    console.log ('signUp' + firstName + lastName + email + password + confirmPassword);
+    console.log ('signUp' + firstName + lastName + email + password);
     auth.createUserWithEmailAndPassword(email, password).then(user => 
     {
         let newUser = 
@@ -189,7 +173,7 @@ export const readAllBoards = () =>
 {
     let user = store.getState().user;    
     console.log("user readAllBoards", user)
-    firebase.database()
+    database
         .ref('users/' + user.id + '/boards')
         .on('value', (res) => {
             snapshotToArray(res)

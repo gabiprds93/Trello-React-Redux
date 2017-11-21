@@ -16,7 +16,7 @@ const SignIn = ({successLogin}) =>
       }
       <HeaderLoginRegister/>
       <Row>
-        <Col xs={4} xsOffset={4} sm={4} smOffset={4} md={4} mdOffset={4} lg={4} lgOffset={4}>
+        <Col xs={10} xsOffset={1} sm={8} smOffset={2} md={6} mdOffset={3} lg={4} lgOffset={4}>
           <form onSubmit={
             e => {
                e.preventDefault();
@@ -54,7 +54,7 @@ const SignIn = ({successLogin}) =>
         </Col>
       </Row>
       <Row className="toSignUp text-center">
-        <Col xs={4} xsOffset={4} md={4} mdOffset={4}>
+        <Col xs={10} xsOffset={1} sm={8} smOffset={2} md={6} mdOffset={3} lg={4} lgOffset={4}>
           <NavLink to={"/signup"}>Create new account</NavLink>
         </Col>       
       </Row>

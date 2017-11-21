@@ -34,7 +34,7 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
                 </Row>
             ));
             return(
-                <Col key={index} xs={3} xsOffset={0} md={3} mdOffset={0}>
+                <Col key={index} xs={6} xsOffset={0} md={3} mdOffset={0} className="containerList">
                     <div className="btn list">
                         <Row>
                             <Col xs={12} md={12}>
@@ -54,7 +54,8 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
                                             componentClass="textarea" 
                                         />
                                     </FormGroup>
-                                    <div className="btn createBoard" onClick={addToCard => addCard(this.inputNewCard.value, selectedItem, list.id, index)}>Add</div> or <a>cancel</a>
+                                    <div className="btn createBoard" onClick={addToCard => addCard(this.inputNewCard.value, selectedItem, list.id, index)}>Add</div>
+                                     {/* or <a>cancel</a> */}
                                 </div> 
                                 : 
                                 <div className="btn newCard" onClick={newCard => changeNewCard(selectedItem, index)}>Add new card...</div>
@@ -73,13 +74,13 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
             <div>
                 <HeaderBoardsDetail/>
                 <Row>
-                    <Col xs={2} xsOffset={0} md={2} mdOffset={0} className="myBoards">
+                    <Col xs={4} xsOffset={0} md={2} mdOffset={0} className="myBoards">
                         {user.boards[selectedItem].name}
                     </Col>
                 </Row>
-                <Row>
+                <Row className="containerList">
                     {listList}
-                    <Col xs={3} xsOffset={0} md={3} mdOffset={0}>
+                    <Col xs={6} xsOffset={0} md={3} mdOffset={0}>
                         {
                             toAddList 
                             ? 
@@ -94,7 +95,8 @@ const Detail = ({successLogin, user, selectedItem, toAddList, inputNewList, toAd
                                 />
                                 <FormControl.Feedback />
                                 </FormGroup>
-                                <div className="btn createBoard" onClick={addToList}>Save list</div> or <a>cancel</a>
+                                <div className="btn createBoard" onClick={addToList}>Save list</div>
+                                 {/* or <a>cancel</a> */}
                             </div> 
                             : 
                             <div className="btn new" onClick={changeNewList}>Add new list...</div>
